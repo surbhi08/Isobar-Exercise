@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+    <filter root="/conf/optus-screens"/>
+    <filter root="/content/optus-screens"/>
+    <filter root="/content/dam/optus-screens"/>
+</workspaceFilter>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+    <filter root="/apps/optus-screens"/>
+    <filter root="/etc/segmentation/contexthub"/>
+    <filter root="/etc/designs/optus-screens"/>
+    <filter root="/etc/cloudsettings/optus-screens"/>
+    <filter root="/libs/granite/contexthub/components/stores/generic-jsonp/clientlib/store.generic-jsonp.js"/>
+</workspaceFilter>
