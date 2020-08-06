@@ -56,3 +56,18 @@ There are three levels of testing contained in the project:
 The project comes with the auto-public repository configured. To setup the repository in your Maven settings, refer to:
 
     http://helpx.adobe.com/experience-manager/kb/SetUpTheAdobeMavenRepository.html
+    
+    
+    
+    
+## Code structure
+
+Model Class to integrate it with the frontent: FlightItenaryModel.java
+Path :au.com.isobar.screens.core.models.FlightItenaryModel
+
+Service & Service Impl for the logic and reading the data : CalculateFareServiceImpl.java / CalculateFareService.java
+Path: au.com.isobar.screens.core.services.impl.CalculateFareServiceImpl
+Service path : au.com.isobar.screens.core.service.CalculateFareService
+
+Utility for doing the cost disocunt - calculations : CostCalculatorUtils.java
+path : au.com.isobar.screens.core.helpers.CostCalculatorUtils
