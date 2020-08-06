@@ -5,7 +5,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import org.apache.commons.lang3.ObjectUtils.Null;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
@@ -23,43 +22,52 @@ import au.com.isobar.screens.core.services.CalculateFareService;
 public class CalculateFareServiceImpl implements CalculateFareService {
 
     private static final Logger LOG = LoggerFactory.getLogger(CalculateFareServiceImpl.class);
-    String club = null;
-
+    String cost = null;
+    String kidPassengerAge;
+    double discountedCosts = 0;
 
     String clubValue = FlightConstants.BOOKING_PASSENGER_CLUB_LEVEL;
     int numberOfAdultPassengers = FlightConstants.NUMBER_OF_ADULT_PASSENGER;
-    int numberOfKidsPassengers = FlightConstants.NUMBER_OF_KIDS;
-    int kidsAge = FlightConstants.KIDS_AGE;
-
+    int numberOfKidsPassengers;
+    int kidsAge;
+    double totalCost;
+    double adultsCost;
 
     Gson gson = new Gson();
 
     @Override
     public JsonObject getFareSydToMelb() {
 
-        String jsonData = FlightConstants.DEPARTURE_JSON_STR;
+        final String jsonData = FlightConstants.DEPARTURE_JSON_STR;
         JsonObject jdata = null;
-
+        
         try {
             jdata = gson.fromJson(jsonData, JsonObject.class);
             if (!jdata.isJsonNull()) {
-                JsonArray jarray = jdata.getAsJsonArray("Departure");
+                final JsonArray jarray = jdata.getAsJsonArray("Departure");
                 for(int i = 0; i < jarray.size(); i++) {
-                    club = jarray.get(0).getAsJsonObject().get("Cost").getAsString();
-                    int intCost = Integer.parseInt(club);
+                    cost = jarray.get(i).getAsJsonObject().get("Cost").getAsString();
+                    final int intCost = Integer.parseInt(cost);
+                     adultsCost = numberOfAdultPassengers * intCost;
+                    final JsonObject kidsData = gson.fromJson(FlightConstants.KIDSDETAILS, JsonObject.class);
+                    final JsonArray kidsDataArray = kidsData.getAsJsonArray("kids-details");
+                    for(int kidsIndex = 0; kidsIndex < kidsDataArray.size(); kidsIndex++){
+                    kidsAge = kidsDataArray.get(kidsIndex).getAsJsonObject().get("age").getAsInt();
 
-                   String totalCost = CostCalculatorUtils.getcost(clubValue,kidsAge,intCost,numberOfAdultPassengers,numberOfKidsPassengers);
-                   LOG.info("Cost after the clubs discounts being applied",totalCost);
+                    final double kidsDiscountedCost = CostCalculatorUtils.getcost(clubValue,kidsAge,intCost);
+                    discountedCosts= discountedCosts+kidsDiscountedCost;
+                    }
+
+                    totalCost = totalCost+discountedCosts;
+                    LOG.info("Cost after the clubs discounts being applied",totalCost);
 
                     jarray.add(new JsonPrimitive(totalCost));
                     jdata.add("discounted costs",jarray);
-
-                    }
-
+                    LOG.info("Final Array", jarray.toString());
 
                 }
-
-        }catch (Exception e){
+            }
+        }catch (final Exception e){
             e.printStackTrace();
         }
 
@@ -69,27 +77,36 @@ public class CalculateFareServiceImpl implements CalculateFareService {
     @Override
     public JsonObject getfareMelbToSyd() {
 
-        String jsonData = FlightConstants.ARRIVAL_JSON_STR;
-        JsonObject jDataArrival= null;
+        final String jsonData = FlightConstants.ARRIVAL_JSON_STR;
+        JsonObject jDataArrival = null;
 
         try {
             jDataArrival = gson.fromJson(jsonData, JsonObject.class);
             if (!jDataArrival.isJsonNull()) {
-                JsonArray jarray = jDataArrival.getAsJsonArray("Arrival");
-                for(int j= 0; j < jarray.size(); j++) {
-                    club = jarray.get(0).getAsJsonObject().get("Cost").getAsString();
-                    int intCostArrival = Integer.parseInt(club);
+                final JsonArray jarray = jDataArrival.getAsJsonArray("Arrival");
+                for (int j = 0; j < jarray.size(); j++) {
+                    cost = jarray.get(j).getAsJsonObject().get("Cost").getAsString();
+                    final int intCost = Integer.parseInt(cost);
+                    adultsCost = numberOfAdultPassengers * intCost;
+                    final JsonObject kidsData = gson.fromJson(FlightConstants.KIDSDETAILS, JsonObject.class);
+                    final JsonArray kidsDataArray = kidsData.getAsJsonArray("kids-details");
+                    for(int kidsIndex = 0; kidsIndex < kidsDataArray.size(); kidsIndex++){
+                    kidsAge = kidsDataArray.get(kidsIndex).getAsJsonObject().get("age").getAsInt();
 
-                    String totalCostArrival = CostCalculatorUtils.getcost(clubValue,kidsAge,intCostArrival,numberOfAdultPassengers,numberOfKidsPassengers);
+                    final double kidsDiscountedCost = CostCalculatorUtils.getcost(clubValue,kidsAge,intCost);
+                    discountedCosts= discountedCosts+kidsDiscountedCost;
+                    }
 
-                    jarray.add(new JsonPrimitive(totalCostArrival));
+                    totalCost = totalCost+discountedCosts;
+                    LOG.info("Cost after the clubs discounts being applied",totalCost);
+
+                    jarray.add(new JsonPrimitive(totalCost));
                     jDataArrival.add("discounted costs",jarray);
-
                 }
 
             }
 
-        }catch (Exception e){
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return jDataArrival;

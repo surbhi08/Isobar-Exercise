@@ -32,7 +32,11 @@ public final class FlightConstants {
     
      public static final String BOOKING_PASSENGER_CLUB_LEVEL = "Bronze";
      public static final int NUMBER_OF_ADULT_PASSENGER = 2;
-     public static final int NUMBER_OF_KIDS = 1;
-     public static final int KIDS_AGE = 1;
+
+     /**
+      * get the kids data 
+      */
+
+     public static final String KIDSDETAILS = "{\"kids-details\":[{\"age\":\"4\"},{\"age\":2}]}";
 
 }

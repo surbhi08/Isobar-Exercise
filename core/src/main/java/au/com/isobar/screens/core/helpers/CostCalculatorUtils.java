@@ -9,18 +9,18 @@ import au.com.isobar.screens.core.constants.FlightConstants;
 public class CostCalculatorUtils {
     private final static Logger LOG = LoggerFactory.getLogger(CostCalculatorUtils.class);
 
-    public static String getcost(String clubLevel, int age, int cost, int noOfAdults, int noOfKids) {
+    public static double getcost(String clubLevel, int age, int cost) {
 
         double output = 0;
-        double adultsCost = noOfAdults * cost;
+    
 
         //if bronze
         if (clubLevel.equals(FlightConstants.BRONZE)) {
 
-            if (age >= 2) {
-                output = noOfKids * (cost * 0.6) + adultsCost;
+            if (age <= 2) {
+                output = (cost * 0.6);
             } else if (3 <= age && age >= 16) {
-                output = noOfKids * (cost * 0.9) + adultsCost;
+                output = (cost * 0.9);
             }
         }
 
@@ -28,9 +28,9 @@ public class CostCalculatorUtils {
         else if (clubLevel.equals(FlightConstants.SILVER)) {
 
             if (0 < age && age >= 8) {
-                output = noOfKids * (cost * 0.8) + adultsCost;
+                output = (cost * 0.8);
             } else if (9 <= age && age >= 16) {
-                output = noOfKids * (cost * 0.9) + adultsCost;
+                output = (cost * 0.9);
             }
         }
 
@@ -38,16 +38,16 @@ public class CostCalculatorUtils {
         else if (clubLevel.equals(FlightConstants.GOLD)) {
 
             if (0 < age && age >= 8) {
-                output = noOfKids * (cost * 0.7) + adultsCost;
+                output = (cost * 0.7);
             } else if (9 <= age && age >= 16) {
-                output = noOfKids * (cost * 0.8) + adultsCost;
+                output = (cost * 0.8);
             }
 
         }
 
-        String totalCost = String.valueOf(output);
-        LOG.info(totalCost);
+        Double totalCost = output;
+        LOG.info(totalCost.toString());
+        
         return totalCost;
-
     }
 }
